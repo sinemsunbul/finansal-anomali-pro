@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Finansal Anomali Tespit Sistemi - Önizleme</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f5f5f5;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background-color: white;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .header {
+      background-color: #bae6fd;
+      padding: 15px;
+      text-align: center;
+      border-bottom: 1px solid #90caf9;
+    }
+
+    .header h1 {
+      font-size: 24px;
+      color: #333;
+    }
+
+    .content {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .left-panel {
+      width: 40%;
+      background-color: #e0f2fe;
+      padding: 20px;
+      border-right: 1px solid #ddd;
+    }
+
+    .right-panel {
+      width: 60%;
+      padding: 20px;
+    }
+
+    h2 {
+      font-size: 18px;
+      margin-bottom: 15px;
+      color: #333;
+    }
+
+    .filter-options {
+      margin-bottom: 20px;
+    }
+
+    .filter-option {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+
+    .filter-checkbox {
+      margin-right: 10px;
+      width: 16px;
+      height: 16px;
+    }
+
+    label {
+      font-size: 14px;
+      color: #333;
+    }
+
+    .button {
+      background-color: white;
+      border: 1px solid #ccc;
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.3s;
+      display: inline-block;
+    }
+
+    .search-section {
+      margin-bottom: 20px;
+    }
+
+    .search-group {
+      margin-bottom: 15px;
+    }
+
+    .search-group label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .search-group input,
+    .search-group select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .results-section h3 {
+      font-size: 16px;
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .results-container {
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 10px;
+      height: 300px;
+      overflow-y: auto;
+      background-color: white;
+    }
+
+    .result-item {
+      padding: 8px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .result-item:last-child {
+      border-bottom: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Finansal Anomali Tespit Sistemi</h1>
+    </div>
+    
+    <div class="content">
+      <!-- Sol Panel - Filtreler -->
+      <div class="left-panel">
+        <h2>Filtreleme Kriterlerini Seçin:</h2>
+        
+        <div class="filter-options">
+          <div class="filter-option">
+            <input type="checkbox" id="kucukTutar" class="filter-checkbox" checked>
+            <label for="kucukTutar">Yüksek Frekansta Küçük Tutar Transferleri</label>
+          </div>
+          
+          <div class="filter-option">
+            <input type="checkbox" id="supheli" class="filter-checkbox" checked>
+            <label for="supheli">Şüpheli Alıcı ve Hesaplar</label>
+          </div>
+          
+          <div class="filter-option">
+            <input type="checkbox" id="gece" class="filter-checkbox">
+            <label for="gece">Gece ve Hafta Sonu Transfer Hacmi</label>
+          </div>
+          
+          <div class="filter-option">
+            <input type="checkbox" id="karaListe" class="filter-checkbox" checked>
+            <label for="karaListe">Kara Listede Hesap</label>
+          </div>
+          
+          <div class="filter-option">
+            <input type="checkbox" id="yurtdisiTransfer" class="filter-checkbox">
+            <label for="yurtdisiTransfer">Yurt Dışı Transfer Büyüklüğü 2500'den Fazla</label>
+          </div>
+          
+          <div class="filter-option">
+            <input type="checkbox" id="yurtdisiGelir" class="filter-checkbox">
+            <label for="yurtdisiGelir">Yurt Dışı Geliri Olanlar</label>
+          </div>
+          
+          <div class="filter-option">
+            <input type="checkbox" id="tersIbraz" class="filter-checkbox">
+            <label for="tersIbraz">Ters İbraz Oranı 50'den Fazla</label>
+          </div>
+          
+          <div class="filter-option">
+            <input type="checkbox" id="kkBakiye" class="filter-checkbox">
+            <label for="kkBakiye">Kredi Kartı-Hesap Bakiye Oranı</label>
+          </div>
+        </div>
+        
+        <div class="button">Filtrele</div>
+      </div>
+      
+      <!-- Sağ Panel - Arama ve Sonuçlar -->
+      <div class="right-panel">
+        <div class="search-section">
+          <div class="search-group">
+            <label for="isimAra">İsim Ara:</label>
+            <input type="text" id="isimAra" placeholder="İsim girin..." value="Mehmet">
+          </div>
+          
+          <div class="search-group">
+            <label for="hesapTuru">Hesap Türü Seçin:</label>
+            <select id="hesapTuru">
+              <option value="Tümü">Tümü</option>
+              <option value="Bireysel" selected>Bireysel</option>
+              <option value="E-cüzdan">E-cüzdan</option>
+              <option value="Kripto">Kripto</option>
+            </select>
+          </div>
+          
+          <div class="button">Skoru 9 ve Üzeri Olanları Filtrele</div>
+        </div>
+        
+        <div class="results-section">
+          <h3>Sonuçlar:</h3>
+          <div class="results-container">
+            <div class="result-item">Mehmet Demir - Hesap No: TR987654321098765432109876 - Puan: 10</div>
+            <div class="result-item">Ali Yılmaz - Hesap No: TR654321098765432109876543 - Puan: 6</div>
+            <div class="result-item">Ayşe Kara - Hesap No: TR456789012345678901234567 - Puan: 9</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

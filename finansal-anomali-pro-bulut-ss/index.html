@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Finansal Anomali Tespit Sistemi Pro</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-light: #818cf8;
+      --primary-dark: #3730a3;
+      --secondary: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --info: #3b82f6;
+      --success: #22c55e;
+      --background: #f9fafb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --text-light: #6b7280;
+      --border: #e5e7eb;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --radius: 0.5rem;
+      --transition: all 0.3s ease;
+    }
+
+    .dark-theme {
+      --primary: #818cf8;
+      --primary-light: #a5b4fc;
+      --primary-dark: #4f46e5;
+      --secondary: #34d399;
+      --background: #111827;
+      --card: #1f2937;
+      --text: #f9fafb;
+      --text-light: #d1d5db;
+      --border: #374151;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+      transition: var(--transition);
+    }
+
+    body {
+      background-color: var(--background);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+      margin-bottom: 2rem;
+    }
+
+    .header h1 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .theme-toggle {
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: var(--radius);
+      transition: var(--transition);
+    }
+
+    .theme-toggle:hover {
+      background-color: var(--border);
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: 1fr 3fr;
+      gap: 1.5rem;
+    }
+
+    .card {
+      background-color: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1.5rem;
+      height: fit-content;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card-header h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    .card-header .icon {
+      color: var(--primary);
+      font-size: 1.25rem;
+    }
+
+    .filter-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .filter-group {
+      margin-bottom: 1rem;
+    }
+
+    .filter-group-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      font-weight: 500;
+      color: var(--primary);
+    }
+
+    .filter-group-header i {
+      margin-right: 0.5rem;
+    }
+
+    .filter-option {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      padding-left: 0.5rem;
+    }
+
+    .filter-checkbox {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 1.25rem;
+      height: 1.25rem;
+      border: 2px solid var(--border);
+      border-radius: 0.25rem;
+      margin-right: 0.75rem;
+      position: relative;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .filter-checkbox:checked {
+      background-color: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .filter-checkbox:checked::after {
+      content: '✓';
+      position: absolute;
+      color: white;
+      font-size: 0.875rem;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .filter-checkbox:focus {
+      outline: 2px solid var(--primary-light);
+      outline-offset: 2px;
+    }
+
+    .filter-label {
+      font-size: 0.9rem;
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    .search-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .search-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .search-group label {
+      font-size: 0.875rem;
+      margin-bottom: 0.5rem;
+      color: var(--text-light);
+    }
+
+    .search-input, .search-select {
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background-color: var(--card);
+      color: var(--text);
+      font-size: 0.9rem;
+      transition: var(--transition);
+    }
+
+    .search-input:focus, .search-select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px var(--primary-light);
+    }
+
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .btn {
+      padding: 0.75rem 1.25rem;
+      border: none;
+      border-radius: var(--radius);
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+    }
+
+    .btn i {
+      margin-right: 0.5rem;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background-color: var(--secondary);
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background-color: #0d9668;
+    }
+
+    .btn-outline {
+      background-color: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .btn-outline:hover {
+      background-color: var(--border);
+    }
+
+    .btn-danger {
+      background-color: var(--danger);
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background-color: #dc2626;
+    }
+
+    .results-section {
+      margin-top: 1rem;
+    }
+
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .results-header h3 {
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+
+    .results-count {
+      background-color: var(--primary);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 1rem;
+      font-size: 0.875rem;
+    }
+
+    .results-table-container {
+      overflow-x: auto;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .results-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    .results-table th, .results-table td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .results-table th {
+      background-color: var(--primary);
+      color: white;
+      font-weight: 500;
+      position: sticky;
+      top: 0;
+    }
+
+    .results-table th:first-child {
+      border-top-left-radius: var(--radius);
+    }
+
+    .results-table th:last-child {
+      border-top-right-radius: var(--radius);
+    }
+
+    .results-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .results-table tr {
+      background-color: var(--card);
+    }
+
+    .results-table tr:hover {
+      background-color: var(--border);
+    }
+
+    .risk-badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 1rem;
+      font-weight: 500;
+      font-size: 0.8rem;
+      display: inline-block;
+    }
+
+    .risk-high {
+      background-color: var(--danger);
+      color: white;
+    }
+
+    .risk-medium {
+      background-color: var(--warning);
+      color: white;
+    }
+
+    .risk-low {
+      background-color: var(--success);
+      color: white;
+    }
+
+    .action-btn {
+      background: none;
+      border: none;
+      color: var(--primary);
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 0.25rem;
+      border-radius: 0.25rem;
+      transition: var(--transition);
+    }
+
+    .action-btn:hover {
+      background-color: var(--border);
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-light);
+      font-style: italic;
+      background-color: var(--card);
+      border-radius: var(--radius);
+    }
+
+    .export-options {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .stats-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+      background-color: var(--card);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-title {
+      font-size: 0.875rem;
+      color: var(--text-light);
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .stat-icon {
+      align-self: flex-end;
+      font-size: 1.25rem;
+      color: var(--primary);
+      margin-top: -2.5rem;
+    }
+
+    .chart-container {
+      height: 300px;
+      margin-top: 1.5rem;
+      position: relative;
+    }
+
+    .chart-bar {
+      position: absolute;
+      bottom: 0;
+      width: 8%;
+      background-color: var(--primary);
+      border-radius: 4px 4px 0 0;
+      transition: height 1s ease-in-out;
+    }
+
+    .chart-label {
+      position: absolute;
+      bottom: -25px;
+      width: 8%;
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--text-light);
+    }
+
+    .chart-y-axis {
+      position: absolute;
+      left: -40px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .chart-y-label {
+      font-size: 0.75rem;
+      color: var(--text-light);
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background-color: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      width: 90%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 1.5rem;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text-light);
+    }
+
+    .detail-row {
+      display: flex;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.75rem;
+    }
+
+    .detail-row:last-child {
+      border-bottom: none;
+    }
+
+    .detail-label {
+      width: 40%;
+      font-weight: 500;
+      color: var(--text-light);
+    }
+
+    .detail-value {
+      width: 60%;
+      color: var(--text);
+    }
+
+    @media (max-width: 992px) {
+      .dashboard {
+        grid-template-columns: 1fr;
+      }
+
+      .search-section {
+        grid-template-columns: 1fr;
+      }
+
+      .stats-cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 576px) {
+      .button-group {
+        flex-direction: column;
+      }
+
+      .stats-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .theme-toggle {
+        margin-top: 1rem;
+      }
+    }
+
+    /* Animasyonlar */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .slide-in {
+      animation: slideIn 0.5s ease-in-out;
+    }
+
+    /* Tooltip */
+    .tooltip {
+      position: relative;
+      display: inline-block;
+    }
+
+    .tooltip .tooltip-text {
+      visibility: hidden;
+      width: 200px;
+      background-color: var(--text);
+      color: white;
+      text-align: center;
+      border-radius: var(--radius);
+      padding: 0.5rem;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .tooltip:hover .tooltip-text {
+      visibility: visible;
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1><i class="fas fa-shield-alt"></i> Finansal Anomali Tespit Sistemi Pro</h1>
+      <button id="themeToggle" class="theme-toggle">
+        <i class="fas fa-moon"></i>
+      </button>
+    </header>
+
+    <div class="stats-cards fade-in">
+      <div class="stat-card">
+        <div class="stat-title">Toplam Hesap</div>
+        <div class="stat-value" id="totalAccounts">10</div>
+        <div class="stat-icon"><i class="fas fa-users"></i></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-title">Yüksek Riskli</div>
+        <div class="stat-value" id="highRiskAccounts">3</div>
+        <div class="stat-icon"><i class="fas fa-exclamation-triangle"></i></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-title">Orta Riskli</div>
+        <div class="stat-value" id="mediumRiskAccounts">4</div>
+        <div class="stat-icon"><i class="fas fa-exclamation"></i></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-title">Düşük Riskli</div>
+        <div class="stat-value" id="lowRiskAccounts">3</div>
+        <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+      </div>
+    </div>
+
+    <div class="dashboard">
+      <div class="card slide-in">
+        <div class="card-header">
+          <h2>Filtreleme Seçenekleri</h2>
+          <span class="icon"><i class="fas fa-filter"></i></span>
+        </div>
+
+        <div class="filter-section">
+          <div class="filter-group">
+            <div class="filter-group-header">
+              <i class="fas fa-exchange-alt"></i> Transfer Özellikleri
+            </div>
+            <div class="filter-option">
+              <input type="checkbox" id="kucukTutar" class="filter-checkbox">
+              <label for="kucukTutar" class="filter-label">Küçük Tutar Transferleri</label>
+            </div>
+            <div class="filter-option">
+              <input type="checkbox" id="geceTransfer" class="filter-checkbox">
+              <label for="geceTransfer" class="filter-label">Gece ve Hafta Sonu Transferleri</label>
+            </div>
+            <div class="filter-option">
+              <input type="checkbox" id="yurtdisiTransfer" class="filter-checkbox">
+              <label for="yurtdisiTransfer" class="filter-label">Yurt Dışı Transfer > 2500</label>
+            </div>
+            <div class="filter-option">
+              <input type="checkbox" id="yurtdisiGelir" class="filter-checkbox">
+              <label for="yurtdisiGelir" class="filter-label">Yurt Dışı Geliri Olanlar</label>
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <div class="filter-group-header">
+              <i class="fas fa-user-shield"></i> Hesap Güvenliği
+            </div>
+            <div class="filter-option">
+              <input type="checkbox" id="supheli" class="filter-checkbox">
+              <label for="supheli" class="filter-label">Şüpheli Hesaplar</label>
+            </div>
+            <div class="filter-option">
+              <input type="checkbox" id="karaListe" class="filter-checkbox">
+              <label for="karaListe" class="filter-label">Kara Listede Hesap</label>
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <div class="filter-group-header">
+              <i class="fas fa-chart-line"></i> Finansal Göstergeler
+            </div>
+            <div class="filter-option">
+              <input type="checkbox" id="tersIbraz" class="filter-checkbox">
+              <label for="tersIbraz" class="filter-label">Ters İbraz Oranı > 50</label>
+            </div>
+            <div class="filter-option">
+              <input type="checkbox" id="kkBakiye" class="filter-checkbox">
+              <label for="kkBakiye" class="filter-label">Kredi Kartı-Hesap Bakiye Oranı</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="search-section">
+          <div class="search-group">
+            <label for="isimAra">İsim veya Hesap No Ara</label>
+            <input type="text" id="isimAra" class="search-input" placeholder="Arama yapın...">
+          </div>
+          <div class="search-group">
+            <label for="hesapTuru">Hesap Türü</label>
+            <select id="hesapTuru" class="search-select">
+              <option value="Tümü">Tümü</option>
+              <option value="Bireysel">Bireysel</option>
+              <option value="E-cüzdan">E-cüzdan</option>
+              <option value="Kripto">Kripto</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="button-group">
+          <button id="filterButton" class="btn btn-primary">
+            <i class="fas fa-search"></i> Filtrele
+          </button>
+          <button id="resetButton" class="btn btn-outline">
+            <i class="fas fa-undo"></i> Sıfırla
+          </button>
+        </div>
+
+        <div class="button-group">
+          <button id="highScoreButton" class="btn btn-danger">
+            <i class="fas fa-exclamation-triangle"></i> Yüksek Riskli Hesaplar
+          </button>
+        </div>
+      </div>
+
+      <div class="card slide-in">
+        <div class="card-header">
+          <h2>Anomali Analizi</h2>
+          <span class="icon"><i class="fas fa-chart-bar"></i></span>
+        </div>
+
+        <div class="results-section">
+          <div class="results-header">
+            <h3>Sonuçlar</h3>
+            <span class="results-count" id="resultsCount">0</span>
+          </div>
+
+          <div id="resultsContainer">
+            <div class="no-results">
+              <i class="fas fa-search" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+              <p>Henüz sonuç yok. Lütfen filtreleme yapın.</p>
+            </div>
+          </div>
+
+          <div class="chart-container" id="riskDistributionChart" style="display: none;">
+            <div class="chart-y-axis">
+              <div class="chart-y-label">10</div>
+              <div class="chart-y-label">8</div>
+              <div class="chart-y-label">6</div>
+              <div class="chart-y-label">4</div>
+              <div class="chart-y-label">2</div>
+              <div class="chart-y-label">0</div>
+            </div>
+            <!-- Chart bars will be added dynamically -->
+          </div>
+
+          <div class="export-options" style="display: none;" id="exportOptions">
+            <button id="exportCSV" class="btn btn-outline">
+              <i class="fas fa-file-csv"></i> CSV
+            </button>
+            <button id="exportPDF" class="btn btn-outline">
+              <i class="fas fa-file-pdf"></i> PDF
+            </button>
+            <button id="printResults" class="btn btn-outline">
+              <i class="fas fa-print"></i> Yazdır
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hesap Detay Modal -->
+  <div id="accountDetailModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalTitle">Hesap Detayları</h3>
+        <button class="modal-close" id="closeModal">&times;</button>
+      </div>
+      <div id="accountDetails">
+        <!-- Hesap detayları buraya eklenecek -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Örnek veri kümesi
+    const data = [
+      {
+        isim: "Ahmet Yılmaz",
+        hesap_numarasi: "TR123456789012345678901234",
+        transfer_tutari: 50,
+        transfer_saati: "2023-10-01 22:00",
+        gelir: 2000,
+        hesap_turu: "E-cüzdan",
+        "kara listede hesap": "yok",
+        "Yurt dışı transfer büyüklüğü": "0",
+        "Ters İbraz Oranı": "15",
+        "Kredi Kartı Harcama": "1000",
+        "Hesap Bakiyesi": "200",
+      },
+      {
+        isim: "Mehmet Demir",
+        hesap_numarasi: "TR987654321098765432109876",
+        transfer_tutari: 500,
+        transfer_saati: "2023-10-01 10:00",
+        gelir: 3000,
+        hesap_turu: "Bireysel",
+        "kara listede hesap": "var",
+        "Yurt dışı transfer büyüklüğü": "0",
+        "Ters İbraz Oranı": "95",
+        "Kredi Kartı Harcama": "1000",
+        "Hesap Bakiyesi": "300",
+      },
+      {
+        isim: "Ayşe Kara",
+        hesap_numarasi: "TR456789012345678901234567",
+        transfer_tutari: 20,
+        transfer_saati: "2023-10-01 23:30",
+        gelir: 1500,
+        hesap_turu: "E-cüzdan",
+        "kara listede hesap": "yok",
+        "Yurt dışı transfer büyüklüğü": "5000",
+        "Ters İbraz Oranı": "75",
+        "Kredi Kartı Harcama": "1000",
+        "Hesap Bakiyesi": "400",
+      },
+      {
+        isim: "Fatma Çelik",
+        hesap_numarasi: "TR321098765432109876543210",
+        transfer_tutari: 1000,
+        transfer_saati: "2023-10-02 01:00",
+        gelir: 2500,
+        hesap_turu: "Kripto",
+        "kara listede hesap": "yok",
+        "Yurt dışı transfer büyüklüğü": "1000",
+        "Ters İbraz Oranı": "25",
+        "Kredi Kartı Harcama": "0",
+        "Hesap Bakiyesi": "0",
+      },
+      {
+        isim: "Ali Yılmaz",
+        hesap_numarasi: "TR654321098765432109876543",
+        transfer_tutari: 5,
+        transfer_saati: "2023-10-02 15:00",
+        gelir: 1000,
+        hesap_turu: "Bireysel",
+        "kara listede hesap": "var",
+        "Yurt dışı transfer büyüklüğü": "0",
+        "Ters İbraz Oranı": "45",
+        "Kredi Kartı Harcama": "1000",
+        "Hesap Bakiyesi": "1000",
+      },
+      {
+        isim: "Zeynep Aslan",
+        hesap_numarasi: "TR001122334455667788990011",
+        transfer_tutari: 75,
+        transfer_saati: "2023-10-02 22:45",
+        gelir: 2200,
+        hesap_turu: "E-cüzdan",
+        "kara listede hesap": "yok",
+        "Yurt dışı transfer büyüklüğü": "200",
+        "Ters İbraz Oranı": "20",
+        "Kredi Kartı Harcama": "800",
+        "Hesap Bakiyesi": "150",
+      },
+      {
+        isim: "Burak Kaya",
+        hesap_numarasi: "TR112233445566778899001122",
+        transfer_tutari: 1200,
+        transfer_saati: "2023-10-01 03:30",
+        gelir: 4000,
+        hesap_turu: "Kripto",
+        "kara listede hesap": "yok",
+        "Yurt dışı transfer büyüklüğü": "1500",
+        "Ters İbraz Oranı": "65",
+        "Kredi Kartı Harcama": "0",
+        "Hesap Bakiyesi": "0",
+      },
+      {
+        isim: "Elif Öztürk",
+        hesap_numarasi: "TR223344556677889900112233",
+        transfer_tutari: 35,
+        transfer_saati: "2023-10-02 19:15",
+        gelir: 1800,
+        hesap_turu: "Bireysel",
+        "kara listede hesap": "yok",
+        "Yurt dışı transfer büyüklüğü": "0",
+        "Ters İbraz Oranı": "10",
+        "Kredi Kartı Harcama": "500",
+        "Hesap Bakiyesi": "250",
+      },
+      {
+        isim: "Hakan Polat",
+        hesap_numarasi: "TR334455667788990011223344",
+        transfer_tutari: 900,
+        transfer_saati: "2023-10-02 00:30",
+        gelir: 3500,
+        hesap_turu: "Kripto",
+        "kara listede hesap": "yok",
+        "Yurt dışı transfer büyüklüğü": "750",
+        "Ters İbraz Oranı": "30",
+        "Kredi Kartı Harcama": "0",
+        "Hesap Bakiyesi": "50",
+      },
+      {
+        isim: "Merve Güneş",
+        hesap_numarasi: "TR445566778899001122334455",
+        transfer_tutari: 10,
+        transfer_saati: "2023-10-01 21:45",
+        gelir: 1200,
+        hesap_turu: "E-cüzdan",
+        "kara listede hesap": "yok",
+        "Yurt dışı transfer büyüklüğü": "100",
+        "Ters İbraz Oranı": "5",
+        "Kredi Kartı Harcama": "900",
+        "Hesap Bakiyesi": "120",
+      },
+    ];
+
+    // DOM elementlerini seç
+    const themeToggle = document.getElementById("themeToggle");
+    const filterButton = document.getElementById("filterButton");
+    const resetButton = document.getElementById("resetButton");
+    const highScoreButton = document.getElementById("highScoreButton");
+    const resultsContainer = document.getElementById("resultsContainer");
+    const resultsCount = document.getElementById("resultsCount");
+    const exportOptions = document.getElementById("exportOptions");
+    const exportCSV = document.getElementById("exportCSV");
+    const exportPDF = document.getElementById("exportPDF");
+    const printResults = document.getElementById("printResults");
+    const riskDistributionChart = document.getElementById("riskDistributionChart");
+    const accountDetailModal = document.getElementById("accountDetailModal");
+    const closeModal = document.getElementById("closeModal");
+    const accountDetails = document.getElementById("accountDetails");
+    const modalTitle = document.getElementById("modalTitle");
+
+    // İstatistik elementleri
+    const totalAccounts = document.getElementById("totalAccounts");
+    const highRiskAccounts = document.getElementById("highRiskAccounts");
+    const mediumRiskAccounts = document.getElementById("mediumRiskAccounts");
+    const lowRiskAccounts = document.getElementById("lowRiskAccounts");
+
+    // Checkbox elementleri
+    const kucukTutarCheckbox = document.getElementById("kucukTutar");
+    const supheliCheckbox = document.getElementById("supheli");
+    const geceCheckbox = document.getElementById("geceTransfer");
+    const karaListeCheckbox = document.getElementById("karaListe");
+    const yurtdisiTransferCheckbox = document.getElementById("yurtdisiTransfer");
+    const yurtdisiGelirCheckbox = document.getElementById("yurtdisiGelir");
+    const tersIbrazCheckbox = document.getElementById("tersIbraz");
+    const kkBakiyeCheckbox = document.getElementById("kkBakiye");
+
+    // Input ve select elementleri
+    const isimAraInput = document.getElementById("isimAra");
+    const hesapTuruSelect = document.getElementById("hesapTuru");
+
+    // Filtreleme sonuçlarını saklamak için değişken
+    let filteredResults = [];
+
+    // Sayfa yüklendiğinde istatistikleri güncelle
+    document.addEventListener("DOMContentLoaded", function() {
+      updateStatistics();
+    });
+
+    // Tema değiştirme
+    themeToggle.addEventListener("click", function() {
+      document.body.classList.toggle("dark-theme");
+      if (document.body.classList.contains("dark-theme")) {
+        themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+      } else {
+        themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+      }
+    });
+
+    // Puan hesaplama fonksiyonu
+    function calculateScore(item) {
+      let score = 0;
+      if (item.transfer_tutari < 100) score += 2;
+      if (item.hesap_turu === "E-cüzdan" || item.hesap_turu === "Kripto") score += 4;
+
+      const transferTime = new Date(item.transfer_saati);
+      const hour = transferTime.getHours();
+      if (hour < 6 || hour > 22) score += 2;
+
+      if (item["kara listede hesap"] === "var") score += 4;
+      if (Number.parseInt(item["Yurt dışı transfer büyüklüğü"]) > 2500) score += 3;
+      if (Number.parseInt(item["Ters İbraz Oranı"]) > 50) score += 4;
+
+      if (
+        Number.parseFloat(item["Hesap Bakiyesi"]) + Number.parseFloat(item["Hesap Bakiyesi"]) / 2 <
+        Number.parseFloat(item["Kredi Kartı Harcama"])
+      )
+        score += 2;
+
+      return score;
+    }
+
+    // Risk seviyesi belirleme
+    function getRiskLevel(score) {
+      if (score >= 9) return "high";
+      if (score >= 6) return "medium";
+      return "low";
+    }
+
+    // Gece transferi kontrolü
+    function isGeceTransfer(transferZamani) {
+      const saat = Number.parseInt(transferZamani.split(" ")[1].split(":")[0]);
+      return saat < 6 || saat > 22;
+    }
+
+    // İstatistikleri güncelleme
+    function updateStatistics() {
+      const allScores = data.map(item => calculateScore(item));
+      const highRisk = allScores.filter(score => score >= 9).length;
+      const mediumRisk = allScores.filter(score => score >= 6 && score < 9).length;
+      const lowRisk = allScores.filter(score => score < 6).length;
+
+      totalAccounts.textContent = data.length;
+      highRiskAccounts.textContent = highRisk;
+      mediumRiskAccounts.textContent = mediumRisk;
+      lowRiskAccounts.textContent = lowRisk;
+    }
+
+    // Filtrele butonuna tıklandığında
+    filterButton.addEventListener("click", function() {
+      // Filtre seçeneklerini topla
+      const filters = {
+        isimArama: isimAraInput.value,
+        hesapTuru: hesapTuruSelect.value,
+        kucukTutarTransfer: kucukTutarCheckbox.checked,
+        suphelihesaplar: supheliCheckbox.checked,
+        geceTransfer: geceCheckbox.checked,
+        karaListe: karaListeCheckbox.checked,
+        yurtdisiTransfer: yurtdisiTransferCheckbox.checked,
+        yurtdisiGelir: yurtdisiGelirCheckbox.checked,
+        tersIbraz: tersIbrazCheckbox.checked,
+        kkBakiye: kkBakiyeCheckbox.checked,
+      };
+
+      // Filtreleme işlemi
+      filteredResults = filterData(filters);
+
+      // Sonuçları göster
+      displayResults(filteredResults);
+    });
+
+    // Sıfırla butonuna tıklandığında
+    resetButton.addEventListener("click", function() {
+      // Tüm filtreleri sıfırla
+      kucukTutarCheckbox.checked = false;
+      supheliCheckbox.checked = false;
+      geceCheckbox.checked = false;
+      karaListeCheckbox.checked = false;
+      yurtdisiTransferCheckbox.checked = false;
+      yurtdisiGelirCheckbox.checked = false;
+      tersIbrazCheckbox.checked = false;
+      kkBakiyeCheckbox.checked = false;
+      isimAraInput.value = "";
+      hesapTuruSelect.value = "Tümü";
+
+      // Sonuçları temizle
+      resultsContainer.innerHTML = `
+        <div class="no-results">
+          <i class="fas fa-search" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+          <p>Henüz sonuç yok. Lütfen filtreleme yapın.</p>
+        </div>
+      `;
+      resultsCount.textContent = "0";
+      exportOptions.style.display = "none";
+      riskDistributionChart.style.display = "none";
+    });
+
+    // Yüksek puan filtrele butonuna tıklandığında
+    highScoreButton.addEventListener("click", function() {
+      // Yüksek puanlı verileri filtrele
+      filteredResults = data
+        .filter(item => calculateScore(item) >= 9)
+        .map(item => {
+          return {
+            ...item,
+            puan: calculateScore(item),
+          };
+        });
+
+      // Sonuçları göster
+      displayResults(filteredResults);
+    });
+
+    // Filtreleme fonksiyonu
+    function filterData(filters) {
+      let filteredData = [...data];
+
+      // İsim veya hesap numarası araması
+      if (filters.isimArama) {
+        filteredData = filteredData.filter(item => 
+          item.isim.toLowerCase().includes(filters.isimArama.toLowerCase()) ||
+          item.hesap_numarasi.toLowerCase().includes(filters.isimArama.toLowerCase())
+        );
+      }
+
+      // Hesap türü filtresi
+      if (filters.hesapTuru !== "Tümü") {
+        filteredData = filteredData.filter(item => item.hesap_turu === filters.hesapTuru);
+      }
+
+      // Diğer filtreler
+      if (filters.kucukTutarTransfer) {
+        filteredData = filteredData.filter(item => item.transfer_tutari < 100);
+      }
+
+      if (filters.suphelihesaplar) {
+        filteredData = filteredData.filter(item => 
+          item.hesap_turu === "E-cüzdan" || item.hesap_turu === "Kripto"
+        );
+      }
+
+      if (filters.geceTransfer) {
+        filteredData = filteredData.filter(item => isGeceTransfer(item.transfer_saati));
+      }
+
+      if (filters.karaListe) {
+        filteredData = filteredData.filter(item => item["kara listede hesap"] === "var");
+      }
+
+      if (filters.yurtdisiTransfer) {
+        filteredData = filteredData.filter(item => 
+          Number.parseInt(item["Yurt dışı transfer büyüklüğü"]) > 2500
+        );
+      }
+
+      if (filters.yurtdisiGelir) {
+        filteredData = filteredData.filter(item => 
+          Number.parseInt(item["Yurt dışı transfer büyüklüğü"]) > 0
+        );
+      }
+
+      if (filters.tersIbraz) {
+        filteredData = filteredData.filter(item => 
+          Number.parseInt(item["Ters İbraz Oranı"]) > 50
+        );
+      }
+
+      if (filters.kkBakiye) {
+        filteredData = filteredData.filter(item =>
+          Number.parseFloat(item["Hesap Bakiyesi"]) + Number.parseFloat(item["Hesap Bakiyesi"]) / 2 <
+          Number.parseFloat(item["Kredi Kartı Harcama"])
+        );
+      }
+
+      return filteredData.map(item => {
+        return {
+          ...item,
+          puan: calculateScore(item),
+        };
+      });
+    }
+
+    // Sonuçları gösterme fonksiyonu
+    function displayResults(results) {
+      // Sonuç sayısını güncelle
+      resultsCount.textContent = results.length;
+
+      if (results.length === 0) {
+        // Sonuç yoksa mesaj göster
+        resultsContainer.innerHTML = `
+          <div class="no-results">
+            <i class="fas fa-search" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+            <p>Hiçbir sonuç bulunamadı.</p>
+          </div>
+        `;
+        exportOptions.style.display = "none";
+        riskDistributionChart.style.display = "none";
+      } else {
+        // Sonuçları tablo olarak göster
+        let tableHTML = `
+          <div class="results-table-container">
+            <table class="results-table">
+              <thead>
+                <tr>
+                  <th>İsim</th>
+                  <th>Hesap No</th>
+                  <th>Hesap Türü</th>
+                  <th>Transfer Tutarı</th>
+                  <th>Risk Puanı</th>
+                  <th>İşlemler</th>
+                </tr>
+              </thead>
+              <tbody>
+        `;
+
+        results.forEach((item, index) => {
+          const riskLevel = getRiskLevel(item.puan);
+          let riskBadge = "";
+
+          if (riskLevel === "high") {
+            riskBadge = `<span class="risk-badge risk-high">${item.puan} - Yüksek</span>`;
+          } else if (riskLevel === "medium") {
+            riskBadge = `<span class="risk-badge risk-medium">${item.puan} - Orta</span>`;
+          } else {
+            riskBadge = `<span class="risk-badge risk-low">${item.puan} - Düşük</span>`;
+          }
+
+          tableHTML += `
+            <tr>
+              <td>${item.isim}</td>
+              <td>${item.hesap_numarasi}</td>
+              <td>${item.hesap_turu}</td>
+              <td>${item.transfer_tutari} TL</td>
+              <td>${riskBadge}</td>
+              <td>
+                <button class="action-btn view-details" data-index="${index}">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </td>
+            </tr>
+          `;
+        });
+
+        tableHTML += `
+              </tbody>
+            </table>
+          </div>
+        `;
+
+        resultsContainer.innerHTML = tableHTML;
+        exportOptions.style.display = "flex";
+
+        // Risk dağılımı grafiğini göster
+        showRiskDistributionChart(results);
+
+        // Detay butonlarına olay dinleyicileri ekle
+        const viewDetailButtons = document.querySelectorAll(".view-details");
+        viewDetailButtons.forEach(button => {
+          button.addEventListener("click", function() {
+            const index = this.getAttribute("data-index");
+            showAccountDetails(filteredResults[index]);
+          });
+        });
+      }
+    }
+
+    // Risk dağılımı grafiğini gösterme
+    function showRiskDistributionChart(results) {
+      riskDistributionChart.style.display = "block";
+      riskDistributionChart.innerHTML = `
+        <div class="chart-y-axis">
+          <div class="chart-y-label">10</div>
+          <div class="chart-y-label">8</div>
+          <div class="chart-y-label">6</div>
+          <div class="chart-y-label">4</div>
+          <div class="chart-y-label">2</div>
+          <div class="chart-y-label">0</div>
+        </div>
+      `;
+
+      // Risk puanlarını hesapla
+      const scores = results.map(item => item.puan);
+      const maxScore = Math.max(...scores, 10);
+      
+      // Her puan için sayıları hesapla (0-10)
+      const scoreCounts = Array(11).fill(0);
+      scores.forEach(score => {
+        scoreCounts[score] = (scoreCounts[score] || 0) + 1;
+      });
+
+      // Grafik çubuklarını oluştur
+      for (let i = 0; i <= 10; i++) {
+        const count = scoreCounts[i] || 0;
+        const percentage = (count / results.length) * 100;
+        const height = (count / Math.max(...scoreCounts)) * 100;
+        
+        const barElement = document.createElement("div");
+        barElement.className = "chart-bar";
+        barElement.style.left = `${(i * 9) + 5}%`;
+        barElement.style.height = `${height}%`;
+        
+        if (i >= 9) {
+          barElement.style.backgroundColor = "var(--danger)";
+        } else if (i >= 6) {
+          barElement.style.backgroundColor = "var(--warning)";
+        } else {
+          barElement.style.backgroundColor = "var(--success)";
+        }
+
+        const labelElement = document.createElement("div");
+        labelElement.className = "chart-label";
+        labelElement.textContent = i;
+        labelElement.style.left = `${(i * 9) + 5}%`;
+
+        riskDistributionChart.appendChild(barElement);
+        riskDistributionChart.appendChild(labelElement);
+      }
+    }
+
+    // Hesap detaylarını gösterme
+    function showAccountDetails(account) {
+      modalTitle.textContent = `${account.isim} - Hesap Detayları`;
+      
+      let detailsHTML = "";
+      
+      // Tüm hesap detaylarını göster
+      detailsHTML += createDetailRow("Hesap Numarası", account.hesap_numarasi);
+      detailsHTML += createDetailRow("Hesap Türü", account.hesap_turu);
+      detailsHTML += createDetailRow("Transfer Tutarı", `${account.transfer_tutari} TL`);
+      detailsHTML += createDetailRow("Transfer Saati", account.transfer_saati);
+      detailsHTML += createDetailRow("Gelir", `${account.gelir} TL`);
+      detailsHTML += createDetailRow("Kara Listede", account["kara listede hesap"]);
+      detailsHTML += createDetailRow("Yurt Dışı Transfer", `${account["Yurt dışı transfer büyüklüğü"]} TL`);
+      detailsHTML += createDetailRow("Ters İbraz Oranı", `%${account["Ters İbraz Oranı"]}`);
+      detailsHTML += createDetailRow("Kredi Kartı Harcama", `${account["Kredi Kartı Harcama"]} TL`);
+      detailsHTML += createDetailRow("Hesap Bakiyesi", `${account["Hesap Bakiyesi"]} TL`);
+      
+      const riskLevel = getRiskLevel(account.puan);
+      let riskText = "";
+      
+      if (riskLevel === "high") {
+        riskText = `<span class="risk-badge risk-high">${account.puan} - Yüksek Risk</span>`;
+      } else if (riskLevel === "medium") {
+        riskText = `<span class="risk-badge risk-medium">${account.puan} - Orta Risk</span>`;
+      } else {
+        riskText = `<span class="risk-badge risk-low">${account.puan} - Düşük Risk</span>`;
+      }
+      
+      detailsHTML += createDetailRow("Risk Puanı", riskText);
+      
+      accountDetails.innerHTML = detailsHTML;
+      accountDetailModal.style.display = "flex";
+    }
+
+    // Detay satırı oluşturma
+    function createDetailRow(label, value) {
+      return `
+        <div class="detail-row">
+          <div class="detail-label">${label}</div>
+          <div class="detail-value">${value}</div>
+        </div>
+      `;
+    }
+
+    // Modal kapatma
+    closeModal.addEventListener("click", function() {
+      accountDetailModal.style.display = "none";
+    });
+
+    // Modal dışına tıklandığında kapatma
+    window.addEventListener("click", function(event) {
+      if (event.target === accountDetailModal) {
+        accountDetailModal.style.display = "none";
+      }
+    });
+
+    // CSV'ye dışa aktarma
+    exportCSV.addEventListener("click", function() {
+      exportToCSV(filteredResults);
+    });
+
+    // PDF'ye dışa aktarma (basit bir simülasyon)
+    exportPDF.addEventListener("click", function() {
+      alert("PDF dışa aktarma özelliği yakında eklenecektir.");
+    });
+
+    // Yazdırma
+    printResults.addEventListener("click", function() {
+      window.print();
+    });
+
+    // CSV'ye dışa aktarma fonksiyonu
+    function exportToCSV(data) {
+      // CSV başlık satırı
+      let csvContent = "İsim,Hesap Numarası,Transfer Tutarı,Transfer Saati,Gelir,Hesap Türü,Kara Listede,Yurt Dışı Transfer,Ters İbraz Oranı,Kredi Kartı Harcama,Hesap Bakiyesi,Risk Puanı\n";
+      
+      // Veri satırları
+      data.forEach(item => {
+        csvContent += `${item.isim},${item.hesap_numarasi},${item.transfer_tutari},${item.transfer_saati},${item.gelir},${item.hesap_turu},${item["kara listede hesap"]},${item["Yurt dışı transfer büyüklüğü"]},${item["Ters İbraz Oranı"]},${item["Kredi Kartı Harcama"]},${item["Hesap Bakiyesi"]},${item.puan}\n`;
+      });
+      
+      // CSV dosyasını oluştur ve indir
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const link = document.createElement("a");
+      const url = URL.createObjectURL(blob);
+      
+      link.setAttribute("href", url);
+      link.setAttribute("download", "finansal_anomali_sonuclari.csv");
+      link.style.visibility = "hidden";
+      
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  </script>
+</body>
+</html>
