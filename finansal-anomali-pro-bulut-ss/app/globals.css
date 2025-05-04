@@ -102,7 +102,9 @@
 }
 
 .risk-medium {
-  @apply bg-warning text-warning-foreground;
+  
+  @apply bg-yellow-400 text-gray-800;
+
 }
 
 .risk-low {
