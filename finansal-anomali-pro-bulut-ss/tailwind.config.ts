@@ -53,6 +53,15 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // ✅ EKLENENLER
+        warning: {
+          DEFAULT: "#facc15",
+          foreground: "#1f2937",
+        },
+        success: {
+          DEFAULT: "#22c55e",
+          foreground: "#ffffff",
+        },
         sky: {
           100: "#e0f2fe",
           200: "#bae6fd",
